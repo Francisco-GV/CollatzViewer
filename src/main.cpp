@@ -4,7 +4,7 @@
 
 int main()
 {
-    std::vector<int> numbers = collatz(20);
+    std::vector<int> numbers = collatz(115);
 
     showGraph(numbers);
 
