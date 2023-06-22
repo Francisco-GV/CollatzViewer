@@ -2,7 +2,7 @@
 #include "SFML/Graphics.hpp"
 #include "algorithm.h"
 
-void draw(sf::RenderWindow& window)
+void drawGraphics(sf::RenderWindow& window)
 {
     sf::CircleShape shape(50.0f);
     shape.setFillColor(sf::Color(200, 50, 50));
@@ -27,7 +27,7 @@ void testWindow()
 
         window.clear(sf::Color::Black);
 
-        draw(window);
+        drawGraphics(window);
 
         window.display();
     }
