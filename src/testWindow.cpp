@@ -8,7 +8,7 @@ void draw(sf::RenderWindow& window)
     window.draw(shape);
 }
 
-int main()
+void testWindow()
 {
     sf::RenderWindow window(sf::VideoMode(800, 600), "My Window");
 
@@ -30,6 +30,4 @@ int main()
 
         window.display();
     }
-
-    return 0;
 }
