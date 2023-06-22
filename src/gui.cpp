@@ -8,6 +8,9 @@ void createAndDisplayWindow()
     unsigned int width = size.x;
     unsigned int height = size.y;
 
+    sf::Color graphLinesColor(255, 100, 100);
+    float graphPadding = 50.f;
+
     while(window.isOpen())
     {
         sf::Event event;
@@ -28,13 +31,21 @@ void createAndDisplayWindow()
 
         window.clear();
 
-        sf::Vertex line[] 
+        // Draw graph
+        sf::Vertex graphLine1[] 
         {
-            sf::Vertex(sf::Vector2f(10.f, 10.f)),
-            sf::Vertex(sf::Vector2f(150.5, 150.f))
+            sf::Vertex(sf::Vector2f(graphPadding, graphPadding), graphLinesColor),
+            sf::Vertex(sf::Vector2f(graphPadding, height - graphPadding), graphLinesColor)
         };
 
-        window.draw(line, 2, sf::Lines);
+        sf::Vertex graphLine2[]
+        {
+            sf::Vertex(sf::Vector2f(graphPadding, height - graphPadding), graphLinesColor),
+            sf::Vertex(sf::Vector2f(width - graphPadding, height - graphPadding), graphLinesColor)
+        };
+
+        window.draw(graphLine1, 2, sf::Lines);
+        window.draw(graphLine2, 2, sf::Lines); 
 
         window.display();
     }
