@@ -22,3 +22,18 @@ std::vector<int> collatz(int n)
 
     return numbers;
 }
+
+int getGreaterNumber(std::vector<int> v)
+{
+    int greater = v[0];
+
+    for (int i = 0; i < v.size(); i++)
+    {
+        if (v[i] > greater)
+        {
+            greater = v[i];
+        } 
+    }
+
+    return greater;
+}
