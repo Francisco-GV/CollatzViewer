@@ -1,5 +1,6 @@
 #include <iostream>
 #include "SFML/Graphics.hpp"
+#include "algorithm.h"
 
 void draw(sf::RenderWindow& window)
 {
@@ -29,5 +30,16 @@ void testWindow()
         draw(window);
 
         window.display();
+    }
+}
+
+void printCollatz(int n)
+{
+    std::vector<int> numbers = collatz(n);
+
+    for (int& n : numbers)
+    {
+        std::cout << n;
+        if (n != 1) std::cout << " - ";
     }
 }
