@@ -10,6 +10,7 @@ int graphWidth;
 int graphHeight;
 
 sf::Color graphLinesColor(255, 100, 100);
+sf::Color graphPointsColor(100, 255, 100);
 float graphPadding = 50.f;
 
 std::vector<int> data;
@@ -44,6 +45,12 @@ void draw(sf::RenderWindow& window)
 {
     window.clear();
 
+    // Draw lines
+    for (std::array<sf::Vertex, 2> line : dataLines)
+    {
+        window.draw(line.data(), 2, sf::Lines);
+    }
+
     // Draw graph
     sf::Vertex graphLine1[] 
     {
@@ -59,11 +66,6 @@ void draw(sf::RenderWindow& window)
 
     window.draw(graphLine1, 2, sf::Lines);
     window.draw(graphLine2, 2, sf::Lines); 
-
-    for (std::array<sf::Vertex, 2> line : dataLines)
-    {
-        window.draw(line.data(), 2, sf::Lines);
-    }
 
     window.display();
 }
@@ -87,14 +89,13 @@ std::vector<std::array<sf::Vertex, 2>> calculateLines()
     std::vector<std::array<sf::Vertex, 2>> lines;
 
     sf::Vector2f lastPoint = calculatePoint(data[0], 0);
-
     for (int i = 1; i < data.size(); i++)
     {
         sf::Vector2f currentPoint = calculatePoint(data[i], i);
 
         std::array<sf::Vertex, 2> stdArray {
-            sf::Vertex(lastPoint, graphLinesColor),
-            sf::Vertex(currentPoint, graphLinesColor)
+            sf::Vertex(lastPoint, graphPointsColor),
+            sf::Vertex(currentPoint, graphPointsColor)
         };
 
         lines.push_back(stdArray);
