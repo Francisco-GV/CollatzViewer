@@ -73,13 +73,11 @@ sf::Vector2f calculatePoint(int num, int index)
     float yPoint;
     float xPoint;
 
-    float resultX = index * graphWidth / data.size();
+    float resultX = index * graphWidth / (data.size() - 1);
     xPoint = resultX + graphPadding;
 
-    float resultY = num * graphHeight / greaterValue;
+    float resultY = (num - 1) * graphHeight / (greaterValue - 1);
     yPoint = height - graphPadding - resultY;
-
-    // std::cout << index << " -  (" << xPoint << ", " << yPoint << ")\n";
 
     return sf::Vector2f(xPoint, yPoint);
 }
@@ -99,9 +97,6 @@ std::vector<std::array<sf::Vertex, 2>> calculateLines()
             sf::Vertex(currentPoint, graphLinesColor)
         };
 
-        std::cout << i << " -  (" << stdArray[0].position.x << ", " << stdArray[0].position.y << "), (" 
-            << stdArray[1].position.x << ", " << stdArray[1].position.y << ")\n";
-
         lines.push_back(stdArray);
 
         lastPoint = sf::Vector2f(currentPoint);
@@ -110,10 +105,10 @@ std::vector<std::array<sf::Vertex, 2>> calculateLines()
     return lines;
 }
 
-void showGraph(std::vector<int>& vectorData)
+void showGraph(std::vector<int>& vectorData, int greaterNumber)
 {
     data = vectorData;
-    greaterValue = getGreaterNumber(data);
+    greaterValue = greaterNumber;
 
     sf::RenderWindow window(sf::VideoMode(750, 500), "CollatzViewer");
 
