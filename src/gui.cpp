@@ -48,12 +48,6 @@ void draw(sf::RenderWindow& window)
 {
     window.clear();
 
-    // Draw lines
-    for (std::array<sf::Vertex, 2> line : dataLines)
-    {
-        window.draw(line.data(), 2, sf::Lines);
-    }
-
     // Draw graph
     sf::Vertex graphLine1[] 
     {
@@ -68,7 +62,13 @@ void draw(sf::RenderWindow& window)
     };
 
     window.draw(graphLine1, 2, sf::Lines);
-    window.draw(graphLine2, 2, sf::Lines); 
+    window.draw(graphLine2, 2, sf::Lines);
+
+    // Draw lines
+    for (std::array<sf::Vertex, 2> line : dataLines)
+    {
+        window.draw(line.data(), 2, sf::Lines);
+    }
 
     window.display();
 }
