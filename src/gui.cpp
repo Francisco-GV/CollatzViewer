@@ -36,6 +36,9 @@ void manageEvents(sf::RenderWindow& window)
             graphHeight = height - (graphPadding * 2);
             graphWidth = width - (graphPadding * 2);
 
+            // TODO: Improve resizing lines without recalculating everything
+            dataLines = calculateLines();
+
             window.setView(sf::View(sf::FloatRect(0, 0, width, height)));
         }
     }
