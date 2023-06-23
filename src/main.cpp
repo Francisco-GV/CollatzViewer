@@ -2,9 +2,15 @@
 #include "gui.h"
 #include "algorithm.h"
 
-int main()
+int main(int argc, char* argv[])
 {
-    int n = 2;
+    if (argc <= 1 || !isInt(argv[1]))
+    {
+        std::cout << "Enter a positive integer.\n";
+        return 1;
+    }
+
+    int n = atoi(argv[1]);
 
     std::vector<int> numbers = collatz(n);
     int greaterValue = getGreaterNumber(numbers);

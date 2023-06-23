@@ -1,4 +1,5 @@
 #include "algorithm.h"
+#include <ctype.h>
 
 std::vector<int> collatz(int n)
 {
@@ -36,4 +37,11 @@ int getGreaterNumber(std::vector<int> v)
     }
 
     return greater;
+}
+
+bool isInt(char* s)
+{
+    while (*s)
+        if (!isdigit(*s++)) return false;
+    return true;
 }
