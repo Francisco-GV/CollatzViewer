@@ -168,7 +168,9 @@ void showGraph(std::vector<int>& vectorData, int greaterNumber)
     data = vectorData;
     greaterValue = greaterNumber;
 
-    sf::RenderWindow window(sf::VideoMode(750, 500), "CollatzViewer");
+    sf::ContextSettings settings;
+    settings.antialiasingLevel = 8;
+    sf::RenderWindow window(sf::VideoMode(750, 500), "CollatzViewer", sf::Style::Default, settings);
 
     font.loadFromFile("resources/font.ttf");
 
