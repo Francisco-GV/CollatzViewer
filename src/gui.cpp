@@ -84,8 +84,9 @@ void draw(sf::RenderWindow& window)
     float textX;
     float textY;
 
-    int textRightPadding = 8;
+    int textPadding = 8;
 
+    // Top
     std::string greaterValueText;
     if (digits(greaterValue) > 7)
     {
@@ -99,30 +100,46 @@ void draw(sf::RenderWindow& window)
 
     text.setString(greaterValueText);
     textSize = text.getLocalBounds().getSize();
-    textX = graphPadding - textSize.x - textRightPadding;
+    textX = graphPadding - textSize.x - textPadding;
     textY = graphPadding;
 
-    if (textX - 0)
+    if (textX < 0)
     {
-        float scaleFactor = graphPadding / (textSize.x + (textRightPadding * 2));
+        float scaleFactor = graphPadding / (textSize.x + (textPadding * 2));
         text.setScale(scaleFactor, scaleFactor);
 
         textSize = text.getGlobalBounds().getSize();
-        textX = graphPadding - textSize.x - textRightPadding;
+        textX = graphPadding - textSize.x - textPadding;
         textY = graphPadding;
     }
 
     text.setPosition(sf::Vector2f(textX, textY));
     window.draw(text);
 
+    // Bottom
     text.setScale(1.f, 1.f);
     text.setString("1");
     textSize = text.getLocalBounds().getSize();
-    textX = graphPadding - textSize.x - 8;
+    textX = graphPadding - textSize.x - textPadding;
     textY = height - graphPadding - textSize.y;
     text.setPosition(sf::Vector2f(textX, textY));
     window.draw(text);
 
+    // Left
+    text.setString("0");
+    textSize = text.getLocalBounds().getSize();
+    textX = graphPadding - textSize.x / 2;
+    textY = height - graphPadding + textPadding / 2;
+    text.setPosition(sf::Vector2f(textX, textY));
+    window.draw(text);
+
+    // Right
+    text.setString(std::to_string(data.size()));
+    textSize = text.getLocalBounds().getSize();
+    textX = width - graphPadding - textSize.x / 2;
+    textY = height - graphPadding + textPadding / 2;
+    text.setPosition(sf::Vector2f(textX, textY));
+    window.draw(text);
 
     window.display();
 }
