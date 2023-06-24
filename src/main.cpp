@@ -14,6 +14,8 @@ int main(int argc, char* argv[])
     if (!isInt(inputNumber)) return 1;
 
     int n = std::stoi(inputNumber);
+    if (n == 0) return 1;
+
     std::vector<int> numbers = collatz(n);
     int greaterValue = getGreaterNumber(numbers);
 
