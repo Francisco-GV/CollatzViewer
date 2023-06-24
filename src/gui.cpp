@@ -6,8 +6,8 @@
 unsigned int width;
 unsigned int height;
 
-int graphWidth;
-int graphHeight;
+float graphWidth;
+float graphHeight;
 
 sf::Color graphLinesColor(255, 100, 100);
 sf::Color graphPointsColor(100, 255, 100);
