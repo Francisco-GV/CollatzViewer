@@ -1,6 +1,8 @@
 #include "gui.h"
 #include "algorithm.h"
 #include <iostream> //Just debug
+#include <sstream>
+#include <iomanip>
 #include <algorithm>
 
 unsigned int width;
@@ -84,7 +86,18 @@ void draw(sf::RenderWindow& window)
 
     int textRightPadding = 8;
 
-    text.setString(std::to_string(greaterValue));
+    std::string greaterValueText;
+    if (digits(greaterValue) > 7)
+    {
+        std::ostringstream oss;
+        oss.precision(1);
+        oss << std::scientific << static_cast<float>(greaterValue);
+        greaterValueText = oss.str();
+    } else {
+        greaterValueText = std::to_string(greaterValue);
+    }
+
+    text.setString(greaterValueText);
     textSize = text.getLocalBounds().getSize();
     textX = graphPadding - textSize.x - textRightPadding;
     textY = graphPadding;
