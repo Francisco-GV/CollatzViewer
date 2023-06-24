@@ -45,4 +45,14 @@ bool isInt(std::string& s)
     return !s.empty() 
         && std::find_if(s.begin(), s.end(), [](unsigned char c) {return !std::isdigit(c);}) 
         == s.end();
-}   
+}
+
+int digits(int n)
+{
+    int digits = 0;
+    while (n) {
+        n /= 10;
+        digits++;
+    }
+    return digits;
+}
