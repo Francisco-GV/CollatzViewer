@@ -7,9 +7,9 @@ add_executable(CollatzViewer ${SOURCES})
 
 target_include_directories(CollatzViewer PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
-find_package(SFML 2 REQUIRED COMPONENTS system window graphics)
+find_package(SFML 2 REQUIRED COMPONENTS graphics)
 
-target_link_libraries(CollatzViewer PRIVATE sfml-system sfml-window sfml-graphics)
+target_link_libraries(CollatzViewer PRIVATE sfml-graphics)
 target_include_directories(CollatzViewer PRIVATE ${SFML_INCLUDE_DIR})
 
-install(TARGETS CollatzViewer)
+file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/resources DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
