@@ -56,3 +56,11 @@ int digits(int n)
     }
     return digits;
 }
+
+int roundUp(int num, int multiple)
+{
+    int remainder = num % multiple;
+    if (remainder == 0) return num;
+
+    return num + multiple - remainder;
+}
