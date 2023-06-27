@@ -1,4 +1,4 @@
-#include "gui.h"
+#include "graph.h"
 #include "algorithm.h"
 #include <iostream> //Just debug
 #include <sstream>

@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.2.0)
 project(CollatzViewer VERSION 0.1.0 LANGUAGES CXX)
 
-set(SOURCES src/main.cpp src/test.cpp src/gui.cpp src/algorithm.cpp)
+set(SOURCES src/main.cpp src/test.cpp src/graph.cpp src/algorithm.cpp)
 
 add_executable(CollatzViewer ${SOURCES})
 
