@@ -1,5 +1,5 @@
 #include <iostream>
-#include "gui.h"
+#include "graph.h"
 #include "algorithm.h"
 
 int main(int argc, char* argv[])
