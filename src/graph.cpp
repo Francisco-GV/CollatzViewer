@@ -4,6 +4,7 @@
 #include <sstream>
 #include <iomanip>
 #include <algorithm>
+#include <cmath>
 
 unsigned int width;
 unsigned int height;
@@ -19,17 +20,17 @@ float fontLimitSize = 14;
 float fontGuideSize = 10;
 float graphPadding = 50.f;
 float guideLineLength = 4.f;
+float guideSpacingMin = 80.f;
 
-// TODO: Replace with variable
-#define NUM_VERTICAL_GUIDES 4
+int numVerticalGuides;
 
 // TODO: Use types with more bytes
 std::vector<int> data;
-std::array<float, NUM_VERTICAL_GUIDES> verticalDataGuides;
+std::vector<float> verticalDataGuides;
 int greaterValue;
 
 std::vector<std::array<sf::Vertex, 2>> dataLines;
-std::array<float, NUM_VERTICAL_GUIDES> verticalGuides;
+std::vector<float> verticalVisualGuides;
 
 
 void manageEvents(sf::RenderWindow& window)
@@ -49,10 +50,7 @@ void manageEvents(sf::RenderWindow& window)
             graphHeight = height - (graphPadding * 2);
             graphWidth = width - (graphPadding * 2);
 
-            for (int i = 0; i < verticalDataGuides.size(); i++)
-            {
-                verticalGuides[i] = calculateYPoint(verticalDataGuides[i], false);
-            }
+            calculateGuides();
 
             // TODO: Improve resizing lines without recalculating everything
             dataLines = calculateLines();
@@ -157,9 +155,9 @@ void draw(sf::RenderWindow& window)
 
     // Draw Guides
 
-    for (int i = 0; i < verticalGuides.size(); i++)
+    for (int i = 0; i < verticalVisualGuides.size(); i++)
     {
-        float guide = verticalGuides[i];
+        float guide = verticalVisualGuides[i];
 
         float startX = graphPadding;
         float startY = guide;
@@ -237,6 +235,32 @@ std::vector<std::array<sf::Vertex, 2>> calculateLines()
     return lines;
 }
 
+void calculateGuides()
+{
+    verticalVisualGuides.clear();
+    int numVerticalGuides = std::floor(graphHeight / guideSpacingMin);
+    
+    if (::numVerticalGuides == numVerticalGuides)
+    {
+        for (int i = 0; i < numVerticalGuides; i++)
+        {
+            verticalVisualGuides.push_back(calculateYPoint(verticalDataGuides[i], false));
+        }
+        return;
+    }
+    ::numVerticalGuides = numVerticalGuides;
+
+    verticalDataGuides.clear();
+
+    float spacing = graphMaxVertical / (numVerticalGuides + 1);
+    for (int i = 0; i < numVerticalGuides; i++)
+    {
+        float num = spacing * (i + 1);
+        verticalDataGuides.push_back(num);
+        verticalVisualGuides.push_back(calculateYPoint(num, false));
+    }
+}
+
 void showGraph(std::vector<int>& vectorData, int greaterNumber)
 {
     data = vectorData;
@@ -259,13 +283,7 @@ void showGraph(std::vector<int>& vectorData, int greaterNumber)
 
     dataLines = calculateLines();
 
-    float sep = graphMaxVertical / (verticalDataGuides.size() + 1.0);
-    for (int i = 0; i < verticalDataGuides.size(); i++)
-    {
-        float num = sep * (i + 1);
-        verticalDataGuides[i] = num;
-        verticalGuides[i] = calculateYPoint(num, false);
-    }
+    calculateGuides();
 
     while(window.isOpen())
     {
