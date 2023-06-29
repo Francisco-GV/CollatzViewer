@@ -238,7 +238,7 @@ std::vector<std::array<sf::Vertex, 2>> calculateLines()
 void calculateGuides()
 {
     verticalVisualGuides.clear();
-    int numVerticalGuides = std::floor(graphHeight / guideSpacingMin);
+    int numVerticalGuides = std::floor(std::abs(graphHeight) / guideSpacingMin);
     
     if (::numVerticalGuides == numVerticalGuides)
     {
