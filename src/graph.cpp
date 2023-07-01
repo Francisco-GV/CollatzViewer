@@ -10,6 +10,7 @@ unsigned int width;
 unsigned int height;
 
 int graphMaxVertical;
+int graphMaxHorizontal;
 float graphWidth;
 float graphHeight;
 
@@ -20,17 +21,21 @@ float fontLimitSize = 14;
 float fontGuideSize = 10;
 float graphPadding = 50.f;
 float guideLineLength = 4.f;
-float guideSpacingMin = 80.f;
+float guideVerticalSpacingMin = 80.f;
+float guideHorizontalSpacingMin = 40.f;
 
 int numVerticalGuides;
+int numHorizontalGuides;
 
 // TODO: Use types with more bytes
 std::vector<int> data;
 std::vector<float> verticalDataGuides;
+std::vector<float> horizontalDataGuides;
 int greaterValue;
 
 std::vector<std::array<sf::Vertex, 2>> dataLines;
 std::vector<float> verticalVisualGuides;
+std::vector<float> horizontalVisualGuides;
 
 
 void manageEvents(sf::RenderWindow& window)
@@ -146,14 +151,14 @@ void draw(sf::RenderWindow& window)
     window.draw(text);
 
     // Right
-    text.setString(std::to_string(data.size()));
+    text.setString(std::to_string(graphMaxHorizontal));
     textSize = text.getLocalBounds().getSize();
     textX = width - graphPadding - textSize.x / 2;
     textY = height - graphPadding + textPadding / 2;
     text.setPosition(sf::Vector2f(textX, textY));
     window.draw(text);
 
-    // Draw Guides
+    // Draw vertical Guides
 
     for (int i = 0; i < verticalVisualGuides.size(); i++)
     {
@@ -178,8 +183,41 @@ void draw(sf::RenderWindow& window)
         text.setString(oss.str());
 
         textSize = text.getLocalBounds().getSize();
-        textX = startX - textSize.x - guideLineLength - 3;
+        textX = startX - textSize.x - guideLineLength - 7;
         textY = startY - textSize.y;
+
+        text.setPosition(sf::Vector2f(textX, textY));
+        window.draw(text);
+        
+    }
+
+    // Draw horizontal Guides
+
+    for (int i = 0; i < horizontalVisualGuides.size(); i++)
+    {
+        float guide = horizontalVisualGuides[i];
+
+        float startX = guide;
+        float startY = height - graphPadding;
+
+        sf::Vertex line[]
+        {
+            sf::Vertex(sf::Vector2f(startX, startY), sf::Color::White),
+            sf::Vertex(sf::Vector2f(guide, height - graphPadding + guideLineLength), sf::Color::White)
+        };
+
+        window.draw(line, 2, sf::Lines);
+
+        text.setCharacterSize(fontGuideSize);
+
+        std::ostringstream oss;
+        oss.precision(0);
+        oss << std::fixed << horizontalDataGuides[i];
+        text.setString(oss.str());
+
+        textSize = text.getLocalBounds().getSize();
+        textX = startX - textSize.x;
+        textY = startY + textSize.y + guideLineLength;
 
         text.setPosition(sf::Vector2f(textX, textY));
         window.draw(text);
@@ -194,15 +232,13 @@ sf::Vector2f calculatePoint(int num, int index)
     float yPoint;
     float xPoint;
 
-    float resultX = index * graphWidth / (data.size() - 1);
-    xPoint = resultX + graphPadding;
-
+    xPoint = calculateXPoint(index);
     yPoint = calculateYPoint(num, true);
 
     return sf::Vector2f(xPoint, yPoint);
 }
 
-float calculateYPoint(int num, bool substractOne)
+float calculateYPoint(float num, bool substractOne)
 {
     int sub = 0;
     if (substractOne) sub = 1;
@@ -211,6 +247,14 @@ float calculateYPoint(int num, bool substractOne)
     float yPoint = height - graphPadding - resultY;
 
     return yPoint;
+}
+
+float calculateXPoint(float num)
+{
+    float resultX = num * graphWidth / graphMaxHorizontal;
+    float xPoint = resultX + graphPadding;
+
+    return xPoint;
 }
 
 std::vector<std::array<sf::Vertex, 2>> calculateLines()
@@ -237,27 +281,43 @@ std::vector<std::array<sf::Vertex, 2>> calculateLines()
 
 void calculateGuides()
 {
-    verticalVisualGuides.clear();
-    int numVerticalGuides = std::floor(std::abs(graphHeight) / guideSpacingMin);
-    
-    if (::numVerticalGuides == numVerticalGuides)
+    calculateGuides(verticalDataGuides, verticalVisualGuides, numVerticalGuides, 
+        graphHeight, graphMaxVertical, guideVerticalSpacingMin, [](float n){return calculateYPoint(n, false);});
+
+    calculateGuides(horizontalDataGuides, horizontalVisualGuides, numHorizontalGuides,
+        graphWidth, graphMaxHorizontal, guideHorizontalSpacingMin, calculateXPoint);
+}
+
+void calculateGuides(std::vector<float>& dataGuides, std::vector<float>& visualGuides, int& currentNumGuides, 
+    float graphMeasure, float maxValue, float spacingMin, float (*calculateAxis)(float))
+{
+    visualGuides.clear();
+    int numGuides = std::floor(std::abs(graphMeasure) / spacingMin) - 1;
+
+    if (numGuides > maxValue)
     {
-        for (int i = 0; i < numVerticalGuides; i++)
+        numGuides = maxValue;
+    }
+
+    if (currentNumGuides == numGuides)  
+    {
+        for (int i = 0; i < numGuides; i++)
         {
-            verticalVisualGuides.push_back(calculateYPoint(verticalDataGuides[i], false));
+            visualGuides.push_back(calculateAxis(dataGuides[i]));
         }
         return;
     }
-    ::numVerticalGuides = numVerticalGuides;
+    currentNumGuides = numGuides;
 
-    verticalDataGuides.clear();
+    dataGuides.clear();
 
-    float spacing = graphMaxVertical / (numVerticalGuides + 1);
-    for (int i = 0; i < numVerticalGuides; i++)
+    float spacing = maxValue / (numGuides + 1);
+
+    for (int i = 0; i < numGuides; i++)
     {
         float num = spacing * (i + 1);
-        verticalDataGuides.push_back(num);
-        verticalVisualGuides.push_back(calculateYPoint(num, false));
+        dataGuides.push_back(num);
+        visualGuides.push_back(calculateAxis(num));
     }
 }
 
@@ -272,11 +332,12 @@ void showGraph(std::vector<int>& vectorData, int greaterNumber)
 
     font.loadFromFile("resources/font.ttf");
 
-    sf::Vector2u size = window.getSize();
+    sf::Vector2u size = window.getSize();  
     width = size.x;
     height = size.y;
 
     graphMaxVertical = roundUp(greaterNumber, 50);
+    graphMaxHorizontal = data.size() - 1;
 
     graphHeight = height - (graphPadding * 2);
     graphWidth = width - (graphPadding * 2);
