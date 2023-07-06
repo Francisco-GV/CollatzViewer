@@ -29,7 +29,7 @@ int main(int argc, char* argv[])
         if (n != 1) std::cout << ", ";
     }
     std::cout << "\n";
-    std::cout << "Iterations: " << numbers.size() << "\n";
+    std::cout << "Iterations: " << (numbers.size() - 1) << "\n";
     std::cout << "Greater Value: " << greaterValue << "\n";
 
     showGraph(numbers, greaterValue);
